@@ -6,11 +6,15 @@ import asyncio
 from openai import OpenAI  # ✅ 최신 OpenAI SDK 사용 (Groq 호환)
 from youtubesearchpython import VideosSearch
 import yt_dlp
+from flask import Flask
+import os
+
 
 # 환경변수 불러오기
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+app = Flask(__name__)
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='/', intents=intents)
@@ -27,6 +31,17 @@ client = OpenAI(
 # 유저별 대화 기록
 chat_history = {}
 
+@app.route("/")
+def health():
+    return "OK", 200
+
+if __name__ == "__main__":
+    # 기존 bot.run() 앞에 이걸 실행하도록 변경
+    import threading
+    threading.Thread(target=lambda: app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))).start()
+
+    bot.run(DISCORD_TOKEN)
+    
 # 애니메이션 메시지
 async def animate_message(message, stop_event, prefix="DMZ 봇에게 물어보는 중"):
     dots = [".", "..", "...", ".", "..", "..."]
