@@ -1,7 +1,7 @@
+from dotenv import load_dotenv
 import os
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 import asyncio
 from openai import OpenAI  # ✅ 최신 OpenAI SDK 사용 (Groq 호환)
 from youtubesearchpython import VideosSearch
@@ -17,7 +17,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 app = Flask(__name__)
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='/', intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 # 음악 큐
 music_queue = []
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     threading.Thread(target=lambda: app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))).start()
 
     bot.run(DISCORD_TOKEN)
-    
+
 # 애니메이션 메시지
 async def animate_message(message, stop_event, prefix="DMZ 봇에게 물어보는 중"):
     dots = [".", "..", "...", ".", "..", "..."]
